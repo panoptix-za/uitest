@@ -8,7 +8,7 @@ pub mod icon;
 mod wndproc;
 pub mod menu;
 pub mod notifyicon;
-mod wide;
+pub mod wide;
 pub mod window;
 
 use std::ptr::null_mut;
@@ -42,6 +42,20 @@ impl Error {
         let msg = format!("{}: {}", s, self.0);
         unsafe { FatalAppExitW(0, msg.to_wide_null().as_ptr()); }
         unreachable!()
+    }
+}
+
+impl std::error::Error for Error {
+    fn description(&self) -> &str {
+        "Windows Error"
+    }
+}
+
+use std::fmt;
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "(Windows Error {})", self.0)
     }
 }
 

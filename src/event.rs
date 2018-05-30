@@ -11,6 +11,7 @@ pub enum Event {
     Create(*const CREATESTRUCTW),
     Destroy,
     GetMinMaxInfo(*mut MINMAXINFO),
+    Timer(u32),
     #[doc(hidden)] Unknown(UINT, WPARAM, LPARAM),
     #[doc(hidden)] NotifyIcon(u16, NotifyIconEvent),
 }
@@ -22,6 +23,7 @@ impl Event {
             wu::WM_CREATE => Event::Create(lparam as *const CREATESTRUCTW),
             wu::WM_DESTROY => Event::Destroy,
             wu::WM_GETMINMAXINFO => Event::GetMinMaxInfo(lparam as *mut MINMAXINFO),
+            wu::WM_TIMER => Event::Timer(wparam as u32),
             WM_APP_NOTIFICATION_ICON => Event::NotifyIcon(
                 HIWORD(lparam as DWORD),
                 NotifyIconEvent::from_raw(wparam, lparam),
